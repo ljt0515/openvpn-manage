@@ -1,37 +1,117 @@
 # openvpn-manage
 
-#### 介绍
-openvpn web管理平台
+## Summary
+OpenVPN server web administration interface.
 
-#### 软件架构
-软件架构说明
+Goal: create quick to deploy and easy to use solution that makes work with small OpenVPN environments a breeze.
 
+If you have docker and docker-compose installed, you can jump directly to [installation](#Prod).
 
-#### 安装教程
+![Status page](docs/images/preview_status.png?raw=true)
 
-1.  xxxx
-2.  xxxx
-3.  xxxx
+Please note this project is in alpha stage. It still needs some work to make it secure and feature complete.
 
-#### 使用说明
-
-1.  xxxx
-2.  xxxx
-3.  xxxx
-
-#### 参与贡献
-
-1.  Fork 本仓库
-2.  新建 Feat_xxx 分支
-3.  提交代码
-4.  新建 Pull Request
+## Motivation
 
 
-#### 码云特技
 
-1.  使用 Readme\_XXX.md 来支持不同的语言，例如 Readme\_en.md, Readme\_zh.md
-2.  码云官方博客 [blog.gitee.com](https://blog.gitee.com)
-3.  你可以 [https://gitee.com/explore](https://gitee.com/explore) 这个地址来了解码云上的优秀开源项目
-4.  [GVP](https://gitee.com/gvp) 全称是码云最有价值开源项目，是码云综合评定出的优秀开源项目
-5.  码云官方提供的使用手册 [https://gitee.com/help](https://gitee.com/help)
-6.  码云封面人物是一档用来展示码云会员风采的栏目 [https://gitee.com/gitee-stars/](https://gitee.com/gitee-stars/)
+## Features
+
+* status page that shows server statistics and list of connected clients
+* easy creation of client certificates
+* ability to download client certificates as a zip package with client configuration inside
+* log preview
+* modification of OpenVPN configuration file through web interface
+
+## Screenshots
+
+[Screenshots](docs/screenshots.md)
+
+## Usage
+
+After startup web service is visible on port 8080. To login use the following default credentials:
+
+* username: admin
+* password: b3secure (this will be soon replaced with random password)
+
+Please change password to your own immediately!
+
+### Prod
+
+Requirements:
+* docker and docker-compose
+* on firewall open ports: 1194/udp and 8080/tcp
+
+Execute commands
+
+    curl -O https://raw.githubusercontent.com/adamwalach/openvpn-manage/master/docs/docker-compose.yml
+    docker-compose up -d
+
+It starts two docker containers. One with OpenVPN server and second with OpenVPNAdmin web application. Through a docker volume it creates following directory structure:
+
+
+    .
+    ├── docker-compose.yml
+    └── openvpn-data
+        ├── conf
+        │   ├── dh2048.pem
+        │   ├── ipp.txt
+        │   ├── keys
+        │   │   ├── 01.pem
+        │   │   ├── ca.crt
+        │   │   ├── ca.key
+        │   │   ├── index.txt
+        │   │   ├── index.txt.attr
+        │   │   ├── index.txt.old
+        │   │   ├── serial
+        │   │   ├── serial.old
+        │   │   ├── server.crt
+        │   │   ├── server.csr
+        │   │   ├── server.key
+        │   │   └── vars
+        │   ├── openvpn.log
+        │   └── server.conf
+        └── db
+            └── data.db
+
+
+
+### Dev
+
+Requirements:
+* golang environments
+* [beego](https://beego.me/docs/install/)
+
+Execute commands:
+
+    go get openvpn-manage
+    cd $GOPATH/src/openvpn-manage
+    bee run -gendoc=true
+
+## Todo
+
+* add unit tests
+* add option to modify certificate properties
+* generate random admin password at initialization phase
+* add versioning
+* add automatic ssl/tls (check how [ponzu](https://github.com/ponzu-cms/ponzu) did it)
+
+
+## License
+
+This project uses [MIT license](LICENSE)
+
+## Remarks
+
+### Vendoring
+https://github.com/kardianos/govendor is used for vendoring.
+
+To update dependencies from GOPATH:
+
+`govendor update +v`
+
+### Template
+AdminLTE - dashboard & control panel theme. Built on top of Bootstrap 3.
+
+Preview: https://almsaeedstudio.com/themes/AdminLTE/index2.html
+

@@ -1,0 +1,109 @@
+{{ template "layout/base.html" . }}
+
+{{define "head"}}
+<title>OpenVPN - 配置</title>
+{{end}}
+
+{{define "body"}}
+<div class="box box-primary">
+  <div class="box-header with-border">
+    <h3 class="box-title">修改配置</h3>
+  </div>
+  <!-- /.box-header -->
+  <!-- form start -->
+  {{template "common/alert.html" .}}
+  <form role="form" action="{{urlfor "OVConfigController.Post"}}" method="post">
+    <div class="box-body">
+      <div class="form-group">
+        <label for="name">Profile</label>
+        <input type="text" class="form-control" name="Profile" id="Profile" disabled value="{{ .Settings.Profile }}">
+      </div>
+
+      <div class="form-group">
+        <label for="name">端口</label>
+        <input type="text" class="form-control" name="Port" id="Port" placeholder="" value="{{ .Settings.Port }}">
+        <span class="help-block">OpenVPN应该侦听哪个TCP/UDP端口</span>
+      </div>
+
+      <div class="form-group">
+        <label for="name">协议</label>
+        <input type="text" class="form-control" name="Ca" id="Ca" placeholder="输入CA证书路径" value="{{ .Settings.Proto }}">
+        <span class="help-block">TCP or UDP server</span>
+      </div>
+
+      <div class="form-group">
+        <label for="name">CA证书</label>
+        <input type="text" class="form-control" name="Ca" id="Ca" placeholder="输入CA证书路径" value="{{ .Settings.Ca }}">
+      </div>
+
+      <div class="form-group">
+        <label for="name">服务器证书</label>
+        <input type="text" class="form-control" name="Cert" id="Cert" placeholder="输入服务器证书路径" value="{{ .Settings.Cert }}">
+        <span id="helpBlock" class="help-block"></span>
+      </div>
+
+      <div class="form-group">
+        <label for="name">服务器密钥</label>
+        <input type="text" class="form-control" name="Key" id="Key" placeholder="输入服务器私有密钥路径" value="{{ .Settings.Key }}">
+        <span id="helpBlock" class="help-block"></span>
+      </div>
+
+      <div class="form-group">
+        <label for="name">密码类型</label>
+        <input type="text" class="form-control" name="Cipher" id="Cipher" placeholder="" value="{{ .Settings.Cipher }}">
+        <span id="helpBlock" class="help-block"></span>
+      </div>
+
+      <div class="form-group">
+        <label for="name">Auth</label>
+        <input type="text" class="form-control" name="Auth" id="Auth" placeholder="" value="{{ .Settings.Auth }}">
+        <span id="helpBlock" class="help-block"></span>
+      </div>
+
+      <div class="form-group">
+        <label for="name">Dh</label>
+        <input type="text" class="form-control" name="Dh" id="Dh" placeholder="" value="{{ .Settings.Dh }}">
+        <span id="helpBlock" class="help-block">Diffie hellman parameters</span>
+      </div>
+
+      <div class="form-group">
+        <label for="name">Server</label>
+        <input type="text" class="form-control" name="Server" id="Server" placeholder="" value="{{ .Settings.Server }}">
+        <span id="helpBlock" class="help-block">配置服务器模式并为OpenVPN提供VPN子网以从中提取客户端地址.</span>
+      </div>
+
+      <div class="form-group">
+        <label for="name">Keepalive</label>
+        <input type="text" class="form-control" name="Keepalive" id="Keepalive" placeholder="" value="{{ .Settings.Keepalive }}">
+        <span id="helpBlock" class="help-block">keepalive指令使类似ping的消息通过链接来回发送，以便每一端都知道另一端何时断开。如果在120秒的时间内未收到ping命令，则每10秒ping一次，假设远程对等体已关闭。</span>
+      </div>
+
+      <div class="form-group">
+        <label for="name">IfconfigPoolPersist</label>
+        <input type="text" class="form-control" name="IfconfigPoolPersist" id="IfconfigPoolPersist" placeholder="" value="{{ .Settings.IfconfigPoolPersist }}">
+        <span id="helpBlock" class="help-block">在此文件中保留客户端<->虚拟IP地址关联的记录。如果OpenVPN关闭或重新启动，则可以从先前分配的池中为重新连接的客户端分配相同的虚拟IP地址。</span>
+      </div>
+
+      <div class="form-group">
+        <label for="name">最大连接数</label>
+        <input type="text" class="form-control" name="MaxClients" id="MaxClients" placeholder="" value="{{ .Settings.MaxClients }}">
+        <span id="helpBlock" class="help-block">我们要允许的最大并发连接客户端数。</span>
+      </div>
+
+      <div class="form-group">
+        <label for="name">管理地址</label>
+        <input type="text" class="form-control" name="Management" id="Management" placeholder="" value="{{ .Settings.Management }}">
+        <span id="helpBlock" class="help-block"></span>
+      </div>
+      {{ .xsrfdata }}
+    </div>
+    <!-- /.box-body -->
+
+    <div class="box-footer">
+      <button type="submit" class="btn btn-primary">保存并应用</button>
+    </div>
+  </form>
+
+</div>
+<!-- /.box -->
+{{end}}

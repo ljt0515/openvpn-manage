@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		{{template "common/header.html" .}}
+		{{template "head" .}}
+	</head>
+  <body class="hold-transition skin-blue layout-top-nav">
+  <div class="wrapper">
+    <header class="main-header">
+      <nav class="navbar navbar-static-top">
+        <div class="container" style="width: 100%">
+          <div class="navbar-header">
+            <a href="{{urlfor "MainController.Get"}}" class="navbar-brand"><b>OpenVPN</b>后台管理</a>
+            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar-collapse">
+              <i class="fa fa-bars"></i>
+            </button>
+          </div>
+
+          <!-- Collect the nav links, forms, and other content for toggling -->
+          <div class="collapse navbar-collapse pull-left" id="navbar-collapse">
+            {{ template "common/header-top-menu.html" . }}
+          </div>
+          <!-- /.navbar-collapse -->
+          <!-- Navbar Right Menu -->
+          <div class="navbar-custom-menu">
+            <ul class="nav navbar-nav">
+              <!--template "common/header-notifications.html" . -->
+              {{ template "common/header-account-menu.html" . }}
+            </ul>
+          </div>
+          <!-- /.navbar-custom-menu -->
+        </div>
+        <!-- /.container-fluid -->
+      </nav>
+    </header>
+    <!-- Full Width Column -->
+    <div class="content-wrapper">
+      <div class="container" style="width: 100%">
+        {{ template "common/header-top-navigation.html" . }}
+
+
+      <!-- Main content -->
+      <section class="content">
+        {{ template "body" . }}
+      </section>
+
+	{{template "common/footer.html" .}}
+        <script>
+          $(document).ready(function() {
+            $("table.tablesorter").tablesorter({
+              theme: "bootstrap",
+              headerTemplate: "{content} {icon}",
+              widgets: ["uitheme"]
+            });
+          });
+        </script>
+	</body>
+</html>
