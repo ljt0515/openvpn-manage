@@ -1,8 +1,8 @@
 package models
 
 import (
-	"openvpn-manage/lib/server/config"
 	"github.com/astaxie/beego/orm"
+	"openvpn-manage/lib/server/config"
 )
 
 //OVConfig holds values for OpenVPN config file

@@ -7,8 +7,8 @@ import (
 
 	passlib "gopkg.in/hlandau/passlib.v1"
 
-	"openvpn-manage/models"
 	"github.com/astaxie/beego"
+	"openvpn-manage/models"
 )
 
 type LoginController struct {
@@ -71,7 +71,7 @@ func Authenticate(login string, password string) (user *models.User, err error) 
 		// No matched password
 		return user, errors.New(msg)
 	}
-	user.Lastlogintime = time.Now()
-	user.Update("Lastlogintime")
+	user.LastLoginTime = time.Now()
+	user.Update("LastLoginTime")
 	return user, nil
 }

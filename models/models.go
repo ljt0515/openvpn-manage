@@ -3,10 +3,10 @@ package models
 import (
 	"os"
 
-	"openvpn-manage/lib/server/config"
 	"github.com/astaxie/beego"
 	"github.com/astaxie/beego/orm"
 	"gopkg.in/hlandau/passlib.v1"
+	"openvpn-manage/lib/server/config"
 )
 
 var GlobalCfg Settings
@@ -102,7 +102,7 @@ func createDefaultOVConfig() {
 			Auth:                "SHA256",
 			Dh:                  "dh.pem",
 			Keepalive:           "10 120",
-			IfconfigPoolPersist: "ipp.txt",
+			IfConfigPoolPersist: "ipp.txt",
 			Management:          "0.0.0.0 5555",
 			MaxClients:          100,
 			Server:              "10.8.0.0 255.255.255.0",
@@ -114,7 +114,7 @@ func createDefaultOVConfig() {
 	o := orm.NewOrm()
 	if created, _, err := o.ReadOrCreate(&c, "Profile"); err == nil {
 		if created {
-			beego.Info("New settings profile created")
+			beego.Info("创建了新的设置配置文件")
 		} else {
 			beego.Debug(c)
 		}

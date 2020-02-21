@@ -7,7 +7,6 @@ import (
 	"github.com/astaxie/beego/orm"
 	"openvpn-manage/lib"
 	"openvpn-manage/lib/server/config"
-	mi "openvpn-manage/lib/server/mi"
 	"openvpn-manage/models"
 )
 
@@ -62,10 +61,10 @@ func (c *OVConfigController) Post() {
 		flash.Error(err.Error())
 	} else {
 		flash.Success("配置已更新")
-		client := mi.NewClient(models.GlobalCfg.MINetwork, models.GlobalCfg.MIAddress)
-		if err := client.Signal("SIGTERM"); err != nil {
-			flash.Warning("配置已更新，但未重新加载OpenVPN服务器： " + err.Error())
-		}
+		//client := mi.NewClient(models.GlobalCfg.MINetwork, models.GlobalCfg.MIAddress)
+		//if err := client.Signal("SIGTERM"); err != nil {
+		//	flash.Warning("配置已更新，但未重新加载OpenVPN服务器： " + err.Error())
+		//}
 	}
 	flash.Store(&c.Controller)
 }

@@ -32,6 +32,7 @@ type OVClient struct {
 	ConnectedSince  string
 	ConnectedSinceT string
 	ClientAddress   string
+	TimeOnline      string
 }
 
 //RoutingPath .

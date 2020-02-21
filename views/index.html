@@ -14,13 +14,13 @@
         </span>
         <div class="info-box-content">
           <span class="info-box-text">
-            客户端连接数量: <span class="info-box-number2">{{ .ovstats.NClients }}</span>
+            客户端连接数量: <span class="info-box-number2">{{ .ovStats.NClients }}</span>
           </span>
           <span class="info-box-text">
-            下行流量: <span class="info-box-number2">{{ printSize .ovstats.BytesIn }}</span>
+            下行流量: <span class="info-box-number2">{{ printSize .ovStats.BytesIn }}</span>
           </span>
           <span class="info-box-text">
-            上行流量: <span class="info-box-number2">{{ printSize .ovstats.BytesOut }}</span>
+            上行流量: <span class="info-box-number2">{{ printSize .ovStats.BytesOut }}</span>
           </span>
         </div>
         <!-- /.info-box-content -->
@@ -37,13 +37,13 @@
         <div class="info-box-content">
           <span class="info-box-text">平均负载:</span>
           <span class="info-box-number">
-            {{ .sysinfo.LoadAvg.One }},
-            {{ .sysinfo.LoadAvg.Five }},
-            {{ .sysinfo.LoadAvg.Fifteen }}<br/>
+            {{ .sysInfo.LoadAvg.One }},
+            {{ .sysInfo.LoadAvg.Five }},
+            {{ .sysInfo.LoadAvg.Fifteen }}<br/>
             </span>
           <span class="info-box-text">
             CPU数量: <span class="info-box-number2">
-              {{ .sysinfo.CPUList.List | len }}
+              {{ .sysInfo.CPUList.List | len }}
             </span>
           </span>
         </div>
@@ -63,7 +63,7 @@
         </span>
         <div class="info-box-content">
           <span class="info-box-text">系统运行时长:</span>
-          <span class="info-box-number">{{ .sysinfo.UptimeS }}</span>
+          <span class="info-box-number">{{ .sysInfo.UptimeS }}</span>
         </div>
         <!-- /.info-box-content -->
       </div>
@@ -81,7 +81,7 @@
             当前时间:
           </span>
           <span class="info-box-number">
-              {{ dateformat .sysinfo.CurrentTime "2006-01-02 15:04:05"}}
+              {{ dateformat .sysInfo.CurrentTime "2006-01-02 15:04:05"}}
           </span>
         </div>
         <!-- /.info-box-content -->
@@ -103,14 +103,14 @@
       <div class="progress-group">
         <span class="progress-text">内存</span>
         <span class="progress-number">
-          <b>{{ printmb .sysinfo.Memory.Used }}</b>
+          <b>{{ printmb .sysInfo.Memory.Used }}</b>
           /
-          {{ printmb .sysinfo.Memory.Total }} MB
-          - {{percent .sysinfo.Memory.Used .sysinfo.Memory.Total}}%
+          {{ printmb .sysInfo.Memory.Total }} MB
+          - {{percent .sysInfo.Memory.Used .sysInfo.Memory.Total}}%
         </span>
         <div class="progress sm">
           <div class="progress-bar progress-bar-aqua"
-            style="width: {{percent .sysinfo.Memory.Used .sysinfo.Memory.Total}}%"></div>
+            style="width: {{percent .sysInfo.Memory.Used .sysInfo.Memory.Total}}%"></div>
         </div>
       </div>
     </div>
@@ -119,14 +119,14 @@
       <div class="progress-group">
         <span class="progress-text">交换区</span>
         <span class="progress-number">
-          <b>{{ printmb .sysinfo.Swap.Used }}</b>
-          / {{ printmb .sysinfo.Swap.Total }} MB
-          - {{percent .sysinfo.Swap.Used .sysinfo.Swap.Total}}%
+          <b>{{ printmb .sysInfo.Swap.Used }}</b>
+          / {{ printmb .sysInfo.Swap.Total }} MB
+          - {{percent .sysInfo.Swap.Used .sysInfo.Swap.Total}}%
         </span>
 
         <div class="progress sm">
           <div class="progress-bar progress-bar-red"
-            style="width: {{percent .sysinfo.Swap.Used .sysinfo.Swap.Total}}%"></div>
+            style="width: {{percent .sysInfo.Swap.Used .sysInfo.Swap.Total}}%"></div>
         </div>
       </div>
     </div>
@@ -144,7 +144,7 @@
       <!-- /.box-header -->
 
       <div class="box-body">
-        {{if .ovstatus}}
+        {{if .ovStatus}}
         <div class="table-responsive">
           <table class="table table-striped table-bordered table-hover table-condensed table-responsive tablesorter tablesorter-bootstrap">
             <thead>
@@ -161,24 +161,25 @@
               </tr>
             </thead>
             <tbody>
-            {{range .ovstatus.ClientList}}
-              <tr>
-                  <td>{{.CommonName}}</td>
-                  <td><span class="label label-success">{{.RealAddress}}</span></td>
-                  <td><span class="label label-success">{{.ClientAddress}}</span></td>
-                  <td>
-                    <span class="label label-success">{{.VirtualAddress}}</span>
-                  </td>
-                  <td>{{.BytesReceived}}({{printSize .BytesReceived}})</td>
-                  <td>{{.BytesSent}}({{printSize .BytesSent}})</td>
-                  <td>{{.ConnectedSince}}</td>
-                  <td>{{.ConnectedSince}}</td>
-                  <td>
-                    <a href="javascript:$.MyAPP.Disconnect('{{.CommonName}}')" class="btn btn-xs btn-danger btn-flat" title="断开">X</a>
-                  </td>
-              </tr>
+            {{if .ovStatus.ClientList}}
+              {{range .ovStatus.ClientList}}
+                <tr>
+                    <td>{{.CommonName}}</td>
+                    <td><span class="label label-success">{{.RealAddress}}</span></td>
+                    <td><span class="label label-success">{{.ClientAddress}}</span></td>
+                    <td>
+                      <span class="label label-success">{{.VirtualAddress}}</span>
+                    </td>
+                    <td>{{.BytesReceived}}({{printSize .BytesReceived}})</td>
+                    <td>{{.BytesSent}}({{printSize .BytesSent}})</td>
+                    <td>{{.ConnectedSince}}</td>
+                    <td>{{.TimeOnline}}</td>
+                    <td>
+                      <a href="javascript:$.MyAPP.Disconnect('{{.CommonName}}')" class="btn btn-xs btn-danger btn-flat" title="断开">X</a>
+                    </td>
+                </tr>
+              {{end}}
             {{end}}
-
             </tbody>
           </table>
         </div>
@@ -212,7 +213,7 @@
       <div class="info-box-content">
       </span>
       <span class="info-box-text">
-        OpenVPN 版本: <span class="info-box-number3">{{ .ovversion }}
+        OpenVPN 版本: <span class="info-box-number3">{{ .ovVersion }}
       </span>
       </div>
       <!-- /.info-box-content -->
@@ -228,9 +229,9 @@
       </span>
       <div class="info-box-content">
         <span class="info-box-text">系统版本:</span>
-        <span class="info-box-number3">{{ .sysinfo.Os }}</span>
+        <span class="info-box-number3">{{ .sysInfo.Os }}</span>
         <span class="info-box-text">系统架构: </span>
-        <span class="info-box-number3">{{ .sysinfo.Arch }} </span>
+        <span class="info-box-number3">{{ .sysInfo.Arch }} </span>
       </div>
       <!-- /.info-box-content -->
     </div>

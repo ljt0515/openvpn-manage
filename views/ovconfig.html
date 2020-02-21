@@ -27,7 +27,7 @@
 
       <div class="form-group">
         <label for="name">协议</label>
-        <input type="text" class="form-control" name="Ca" id="Ca" placeholder="输入CA证书路径" value="{{ .Settings.Proto }}">
+        <input type="text" class="form-control" name="Proto" id="Proto" placeholder="输入OpenVpn使用的协议" value="{{ .Settings.Proto }}">
         <span class="help-block">TCP or UDP server</span>
       </div>
 
@@ -79,8 +79,8 @@
       </div>
 
       <div class="form-group">
-        <label for="name">IfconfigPoolPersist</label>
-        <input type="text" class="form-control" name="IfconfigPoolPersist" id="IfconfigPoolPersist" placeholder="" value="{{ .Settings.IfconfigPoolPersist }}">
+        <label for="name">IfConfigPoolPersist</label>
+        <input type="text" class="form-control" name="IfConfigPoolPersist" id="IfConfigPoolPersist" placeholder="" value="{{ .Settings.IfConfigPoolPersist }}">
         <span id="helpBlock" class="help-block">在此文件中保留客户端<->虚拟IP地址关联的记录。如果OpenVPN关闭或重新启动，则可以从先前分配的池中为重新连接的客户端分配相同的虚拟IP地址。</span>
       </div>
 

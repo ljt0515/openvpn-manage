@@ -3,16 +3,14 @@ package controllers
 import (
 	"archive/zip"
 	"fmt"
-	"io"
-	"os"
-	"path/filepath"
-	"time"
-
-	"openvpn-manage/lib/client/config"
-	"openvpn-manage/lib"
-	"openvpn-manage/models"
 	"github.com/astaxie/beego"
 	"github.com/astaxie/beego/validation"
+	"io"
+	"openvpn-manage/lib"
+	"openvpn-manage/lib/client/config"
+	"openvpn-manage/models"
+	"os"
+	"path/filepath"
 )
 
 type NewCertParams struct {
@@ -58,10 +56,8 @@ func (c *CertificatesController) Download() {
 
 func addFileToZip(zw *zip.Writer, path string) error {
 	header := &zip.FileHeader{
-		Name:         filepath.Base(path),
-		Method:       zip.Store,
-		ModifiedTime: uint16(time.Now().UnixNano()),
-		ModifiedDate: uint16(time.Now().UnixNano()),
+		Name:   filepath.Base(path),
+		Method: zip.Store,
 	}
 	fi, err := os.Open(path)
 	if err != nil {
@@ -147,7 +143,6 @@ func saveClientConfig(name string) (string, error) {
 	cfg.Proto = serverConfig.Proto
 	cfg.Auth = serverConfig.Auth
 	cfg.Cipher = serverConfig.Cipher
-	cfg.Keysize = serverConfig.Keysize
 	cfg.Ca = name + ".ca"
 	destPath := models.GlobalCfg.OVConfigPath + "keys/" + name + ".conf"
 	if err := config.SaveToFile("conf/openvpn-client-config.tpl",

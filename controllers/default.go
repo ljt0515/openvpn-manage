@@ -22,30 +22,23 @@ func (c *MainController) NestPrepare() {
 }
 
 func (c *MainController) Get() {
-	c.Data["sysinfo"] = lib.GetSystemInfo()
+	c.Data["sysInfo"] = lib.GetSystemInfo()
 	lib.Dump(lib.GetSystemInfo())
 	client := mi.NewClient(models.GlobalCfg.MINetwork, models.GlobalCfg.MIAddress)
 	status, err := client.GetStatus()
 	if err != nil {
 		beego.Error(err)
 	} else {
-		c.Data["ovstatus"] = status
+		c.Data["ovStatus"] = status
+		c.Data["ovVersion"] = status.Title
 	}
 	lib.Dump(status)
-
-	version, err := client.GetVersion()
-	if err != nil {
-		beego.Error(err)
-	} else {
-		c.Data["ovversion"] = version.OpenVPN
-	}
-	lib.Dump(version)
 
 	pid, err := client.GetPid()
 	if err != nil {
 		beego.Error(err)
 	} else {
-		c.Data["ovpid"] = pid
+		c.Data["ovPid"] = pid
 	}
 	lib.Dump(pid)
 
@@ -53,7 +46,7 @@ func (c *MainController) Get() {
 	if err != nil {
 		beego.Error(err)
 	} else {
-		c.Data["ovstats"] = loadStats
+		c.Data["ovStats"] = loadStats
 	}
 	lib.Dump(loadStats)
 

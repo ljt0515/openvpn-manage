@@ -10,11 +10,10 @@ var defaultConfig = Config{
 	Port:                1194,
 	Proto:               "udp",
 	Cipher:              "AES-256-CBC",
-	Keysize:             256,
 	Auth:                "SHA256",
 	Dh:                  "dh2048.pem",
 	Keepalive:           "10 120",
-	IfconfigPoolPersist: "ipp.txt",
+	IfConfigPoolPersist: "ipp.txt",
 }
 
 //Config model
@@ -26,13 +25,12 @@ type Config struct {
 	Cert string
 	Key  string
 
-	Cipher  string
-	Keysize int
-	Auth    string
-	Dh      string
+	Cipher string
+	Auth   string
+	Dh     string
 
 	Server              string
-	IfconfigPoolPersist string
+	IfConfigPoolPersist string
 	Keepalive           string
 	MaxClients          int
 

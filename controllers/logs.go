@@ -1,12 +1,11 @@
 package controllers
 
 import (
-	"bufio"
-	"os"
+	"openvpn-manage/lib/server/mi"
 	"strings"
 
-	"openvpn-manage/models"
 	"github.com/astaxie/beego"
+	"openvpn-manage/models"
 )
 
 type LogsController struct {
@@ -34,25 +33,15 @@ func (c *LogsController) Get() {
 		return
 	}
 
-	fName := settings.OVConfigPath + "/openvpn.log"
-	file, err := os.Open(fName)
-	if err != nil {
-		beego.Error(err)
-	}
-	defer file.Close()
-	scanner := bufio.NewScanner(file)
-	var logs []string
-	for scanner.Scan() {
-		line := scanner.Text()
-		if strings.Index(line, " MANAGEMENT: ") == -1 {
-			logs = append(logs, strings.Trim(line, "\t"))
-		}
-	}
+	client := mi.NewClient(models.GlobalCfg.MINetwork, models.GlobalCfg.MIAddress)
+	getLogs, _ := client.GetLogs()
+	var logs = strings.Split(getLogs, "\n")
+
 	start := len(logs) - 200
 	if start < 0 {
 		start = 0
 	}
-	c.Data["logs"] = reverse(logs[start:])
+	c.Data["logs"] = logs
 }
 
 func reverse(lines []string) []string {

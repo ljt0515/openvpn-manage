@@ -3,15 +3,16 @@ package mi
 import (
 	"bufio"
 	"net"
+	"time"
 )
 
-//Client is used to connect to OpenVPN Management Interface
+//Client 用于连接到OpenVPN管理界面
 type Client struct {
 	MINetwork string
 	MIAddress string
 }
 
-//NewClient initializes Management Interface client structure
+//NewClient 初始化管理接口客户端结构
 func NewClient(network, address string) *Client {
 	c := &Client{
 		MINetwork: network, //Management Interface Network
@@ -21,7 +22,7 @@ func NewClient(network, address string) *Client {
 	return c
 }
 
-//GetPid returns process id of OpenVPN server
+//GetPid 获取OpenVPN服务器的进程ID
 func (c *Client) GetPid() (int64, error) {
 	str, err := c.Execute("pid")
 	if err != nil {
@@ -30,7 +31,7 @@ func (c *Client) GetPid() (int64, error) {
 	return ParsePid(str)
 }
 
-//GetVersion returns version of OpenVPN server
+//GetVersion 获取OpenVPN服务器的版本
 func (c *Client) GetVersion() (*Version, error) {
 	str, err := c.Execute("version")
 	if err != nil {
@@ -39,7 +40,7 @@ func (c *Client) GetVersion() (*Version, error) {
 	return ParseVersion(str)
 }
 
-//GetStatus returns list of connected clients and routing table
+//GetStatus 获取连接的客户端列表和路由表
 func (c *Client) GetStatus() (*Status, error) {
 	str, err := c.Execute("status 2")
 	if err != nil {
@@ -48,7 +49,16 @@ func (c *Client) GetStatus() (*Status, error) {
 	return ParseStatus(str)
 }
 
-//GetLoadStats returns number of connected clients and total number of network traffic
+//GetStatus 获取连接的客户端列表和路由表
+func (c *Client) GetLogs() (string, error) {
+	str, err := c.Execute("log all")
+	if err != nil {
+		return "", err
+	}
+	return str, err
+}
+
+//返回已连接客户端的数量和网络流量的总数
 func (c *Client) GetLoadStats() (*LoadStats, error) {
 	str, err := c.Execute("load-stats")
 	if err != nil {
@@ -57,7 +67,7 @@ func (c *Client) GetLoadStats() (*LoadStats, error) {
 	return ParseStats(str)
 }
 
-//KillSession kills OpenVPN connection
+//杀死OpenVPN连接
 func (c *Client) KillSession(cname string) (string, error) {
 	str, err := c.Execute("kill " + cname)
 	if err != nil {
@@ -66,7 +76,7 @@ func (c *Client) KillSession(cname string) (string, error) {
 	return ParseKillSession(str)
 }
 
-//Signal sends signal to daemon
+//Signal 向守护程序发送信号
 func (c *Client) Signal(signal string) error {
 	str, err := c.Execute("signal " + signal)
 	if err != nil {
@@ -75,9 +85,9 @@ func (c *Client) Signal(signal string) error {
 	return ParseSignal(str)
 }
 
-//Execute connects to the OpenVPN server, sends command and reads response
+//Execute 连接到OpenVPN服务器，发送命令并读取响应
 func (c *Client) Execute(cmd string) (string, error) {
-	conn, err := net.Dial(c.MINetwork, c.MIAddress)
+	conn, err := net.DialTimeout(c.MINetwork, c.MIAddress, 3*time.Second)
 	if err != nil {
 		return "", err
 	}

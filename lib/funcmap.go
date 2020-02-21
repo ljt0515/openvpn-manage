@@ -6,6 +6,7 @@ import (
 	"github.com/astaxie/beego"
 	"strconv"
 	"strings"
+	"time"
 )
 
 //AddFuncMaps .
@@ -39,7 +40,7 @@ func AddFuncMaps() {
 			return num2str(int64(i.(uint64)/1024/1024), '\u00A0')
 		case int64:
 			size, _ := strconv.ParseFloat(strconv.FormatInt(i.(int64), 10), 64)
-			return strconv.FormatFloat(size/1024/1024,'E',-1,64)
+			return strconv.FormatFloat(size/1024/1024, 'E', -1, 64)
 		default:
 			beego.Error("Unknown type:", v)
 		}
@@ -51,25 +52,29 @@ func AddFuncMaps() {
 	beego.AddFuncMap("printSize", func(i int64) string {
 		var size float64
 		var unit string
-		if i>1024{
-			size = float64(i)/1024
+		if i > 1024 {
+			size = float64(i) / 1024
 			unit = "KB"
 		}
-		if size>1024{
-			size = size/1024
+		if size > 1024 {
+			size = size / 1024
 			unit = "MB"
 		}
-		if size>1024{
-			size = size/1024
+		if size > 1024 {
+			size = size / 1024
 			unit = "GB"
 		}
-		return fmt.Sprintf("%.2f", size)+unit
+		return fmt.Sprintf("%.2f", size) + unit
 	})
 	beego.AddFuncMap("printgb", func(i uint64) string {
 		return num2str(int64(i/1024/1024/1024), ' ')
 	})
-	beego.AddFuncMap("compareStr", func(a string,b string) bool {
-		return strings.Compare(a,b)==0
+	beego.AddFuncMap("dateFormat", func(i string) string {
+		timestamp, _ := strconv.ParseInt(i, 10, 64)
+		return time.Unix(timestamp, 0).Format("2006-01-02 15:04:05")
+	})
+	beego.AddFuncMap("compareStr", func(a string, b string) bool {
+		return strings.Compare(a, b) == 0
 	})
 	beego.AddFuncMap("percent", func(x, y interface{}) string {
 		beego.Notice("Percent", x, y)

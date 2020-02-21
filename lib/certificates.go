@@ -3,12 +3,13 @@ package lib
 import (
 	"fmt"
 	"io/ioutil"
+	"os"
 	"os/exec"
 	"strings"
 	"time"
 
-	"openvpn-manage/models"
 	"github.com/astaxie/beego"
+	"openvpn-manage/models"
 )
 
 //Cert
@@ -93,15 +94,14 @@ func trim(s string) string {
 	return strings.Trim(strings.Trim(s, "\r\n"), "\n")
 }
 
-func CreateCertificate(name string) error {
-	rsaPath := "/etc/openvpn/server/easy-rsa/"
-	varsPath := models.GlobalCfg.OVConfigPath + "keys/vars"
-	cmd := exec.Command("/bin/bash", "-c",
-		fmt.Sprintf(
-			"source %s &&"+
-				"export KEY_NAME=%s &&"+
-				"%s/build-key --batch %s", varsPath, name, rsaPath, name))
-	cmd.Dir = models.GlobalCfg.OVConfigPath
+func CreateCertificate(name string) bool {
+	_, err := os.Stat(models.GlobalCfg.OVConfigPath + "easy-rsa/pki/issued/" + name + ".crt")
+	if os.IsNotExist(err) {
+		return false
+	}
+	return false
+	cmd := exec.Command("/bin/bash", "-c", "EASYRSA_CERT_EXPIRE=3650 easyrsa build-client-full "+name+" nopass")
+	cmd.Dir = models.GlobalCfg.OVConfigPath + "easy-rsa/"
 	output, err := cmd.CombinedOutput()
 	if err != nil {
 		beego.Debug(string(output))

@@ -13,7 +13,7 @@ auth {{ .Auth }}
 tls-crypt tc.key
 topology subnet
 server {{ .Server }}
-ifconfig-pool-persist {{ .IfconfigPoolPersist }}
+ifconfig-pool-persist {{ .IfConfigPoolPersist }}
 push "redirect-gateway def1 bypass-dhcp"
 push "dhcp-option DNS 114.114.114.114"
 push "dhcp-option DNS 8.8.8.8"
