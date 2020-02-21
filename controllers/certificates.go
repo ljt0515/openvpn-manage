@@ -109,7 +109,7 @@ func (c *CertificatesController) Post() {
 		if vMap := validateCertParams(cParams); vMap != nil {
 			c.Data["validation"] = vMap
 		} else {
-			if err := lib.CreateCertificate(cParams.Name); err != nil {
+			if lib.CreateCertificate(cParams.Name) {
 				beego.Error(err)
 				flash.Error(err.Error())
 				flash.Store(&c.Controller)
