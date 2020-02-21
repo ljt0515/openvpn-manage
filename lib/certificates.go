@@ -106,7 +106,7 @@ func CreateCertificate(name string) bool {
 	if err != nil {
 		beego.Debug(string(output))
 		beego.Error(err)
-		return err
+		return false
 	}
-	return nil
+	return true
 }
