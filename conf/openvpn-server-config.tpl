@@ -1,6 +1,6 @@
 management {{ .Management }}
 
-local 192.168.10.155
+local {{ .ServerLocal }}
 port {{ .Port }}
 proto {{ .Proto }}
 dev tun
@@ -24,7 +24,7 @@ group nobody
 persist-key
 persist-tun
 status openvpn-status.log
-log openvpn.log
+log-append openvpn.log
 verb 3
 crl-verify crl.pem
 explicit-exit-notify

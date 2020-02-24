@@ -30,6 +30,7 @@ type Config struct {
 	Dh     string
 
 	Server              string
+	ServerLocal         string
 	IfConfigPoolPersist string
 	Keepalive           string
 	MaxClients          int

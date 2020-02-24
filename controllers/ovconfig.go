@@ -2,6 +2,7 @@ package controllers
 
 import (
 	"html/template"
+	"strings"
 
 	"github.com/astaxie/beego"
 	"github.com/astaxie/beego/orm"
@@ -44,6 +45,7 @@ func (c *OVConfigController) Post() {
 		flash.Store(&c.Controller)
 		return
 	}
+	cfg.ServerLocal = strings.Split(models.GlobalCfg.MIAddress, ":")[0]
 	lib.Dump(cfg)
 	c.Data["Settings"] = &cfg
 

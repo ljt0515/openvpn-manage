@@ -2,14 +2,15 @@ package lib
 
 import (
 	"fmt"
+	"github.com/astaxie/beego"
+	"golang.org/x/text/encoding/simplifiedchinese"
 	"io/ioutil"
+	"openvpn-manage/models"
 	"os"
 	"os/exec"
+	"runtime"
 	"strings"
 	"time"
-
-	"github.com/astaxie/beego"
-	"openvpn-manage/models"
 )
 
 //Cert
@@ -32,6 +33,12 @@ type Details struct {
 	Organisation string
 	Email        string
 }
+type Charset string
+
+const (
+	UTF8    = Charset("UTF-8")
+	GB18030 = Charset("GB18030")
+)
 
 func ReadCerts(path string) ([]*Cert, error) {
 	certs := make([]*Cert, 0, 0)
@@ -96,11 +103,16 @@ func trim(s string) string {
 
 func CreateCertificate(name string) bool {
 	_, err := os.Stat(models.GlobalCfg.OVConfigPath + "easy-rsa/pki/issued/" + name + ".crt")
-	if os.IsNotExist(err) {
-		return false
+	if !os.IsNotExist(err) {
+		return true
 	}
-	return false
-	cmd := exec.Command("/bin/bash", "-c", "EASYRSA_CERT_EXPIRE=3650 easyrsa build-client-full "+name+" nopass")
+	fmt.Println(runtime.GOOS)
+	var cmd *exec.Cmd
+	if runtime.GOOS == "windows" {
+		cmd = exec.Command("cmd", "/C", "dir")
+	} else {
+		cmd = exec.Command("/bin/bash", "-c", "EASYRSA_CERT_EXPIRE=3650 ./easyrsa build-client-full "+name+" nopass")
+	}
 	cmd.Dir = models.GlobalCfg.OVConfigPath + "easy-rsa/"
 	output, err := cmd.CombinedOutput()
 	if err != nil {
@@ -108,5 +120,21 @@ func CreateCertificate(name string) bool {
 		beego.Error(err)
 		return true
 	}
+	Dump(ConvertByte2String(output, GB18030))
+	Dump(output)
 	return false
+}
+
+func ConvertByte2String(byte []byte, charset Charset) string {
+	var str string
+	switch charset {
+	case GB18030:
+		var decodeBytes, _ = simplifiedchinese.GB18030.NewDecoder().Bytes(byte)
+		str = string(decodeBytes)
+	case UTF8:
+		fallthrough
+	default:
+		str = string(byte)
+	}
+	return str
 }
