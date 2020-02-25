@@ -1,7 +1,10 @@
 package lib
 
 import (
+	"bufio"
 	"encoding/json"
+	"io"
+	"os"
 	"strings"
 
 	"github.com/astaxie/beego"
@@ -63,4 +66,33 @@ func CopyStruct(src interface{}, dst interface{}) error {
 	}
 
 	return nil
+}
+
+func ReadLine(filePth string) (string, error) {
+	f, err := os.Open(filePth)
+	if err != nil {
+		return "", nil
+	}
+	defer f.Close()
+	var str []string
+	bfRd := bufio.NewReader(f)
+	flag := true
+	for {
+		line, err := bfRd.ReadBytes('\n')
+		strLine := string(line)
+		if flag {
+			flag = !strings.Contains(strLine, "BEGIN")
+		} else {
+			if strLine != "" {
+				str = append(str, strLine)
+			}
+			if err != nil { //遇到任何错误立即返回，并忽略 EOF 错误信息
+				if err == io.EOF {
+					return strings.Join(str, ""), nil
+				}
+				return "", err
+			}
+		}
+	}
+	return "", nil
 }

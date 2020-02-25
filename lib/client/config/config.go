@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"html/template"
 	"io/ioutil"
+	"strings"
 )
 
 var defaultConfig = Config{
@@ -11,7 +12,6 @@ var defaultConfig = Config{
 	Port:          1194,
 	Proto:         "udp",
 	Cipher:        "AES-256-CBC",
-	Keysize:       256,
 	Auth:          "SHA256",
 	Ca:            "ca.crt",
 }
@@ -22,13 +22,12 @@ type Config struct {
 	Port          int
 	Proto         string
 
-	Ca   string
-	Cert string
-	Key  string
-
-	Cipher  string
-	Keysize int
-	Auth    string
+	Ca       string
+	Cert     string
+	Key      string
+	TlsCrypt string
+	Cipher   string
+	Auth     string
 }
 
 //New returns config object with default values
@@ -60,5 +59,5 @@ func SaveToFile(tplPath string, c Config, destPath string) error {
 		return err
 	}
 
-	return ioutil.WriteFile(destPath, []byte(str), 0644)
+	return ioutil.WriteFile(destPath, []byte(strings.ReplaceAll(str, "&#43;", "+")), 0644)
 }

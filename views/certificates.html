@@ -5,7 +5,28 @@
 {{end}}
 
 {{define "body"}}
+  <div class="box box-primary">
+    <div class="box-header with-border">
+      <h3 class="box-title">创建一个新证书</h3>
+    </div>
+    <!-- /.box-header -->
+    <!-- form start -->
+    {{template "common/alert.html" .}}
+    <form role="form" action="{{urlfor "CertificatesController.Post"}}" method="post">
+      <div class="box-body">
+        <div class="form-group {{if field_error_exist .validation "Name" }}has-error{{end}}" >
+          <label for="name">名字</label>
+          <input type="text" class="form-control" id="Name" name="Name">
+        </div>
+        <span class="help-block"> {{template "common/fvalid.html" field_error_message .validation "Name" }}</span>
+      </div>
+      <!-- /.box-body -->
 
+      <div class="box-footer">
+        <button type="submit" class="btn btn-primary">创建</button>
+      </div>
+    </form>
+  </div>
 <div class="row">
   <div class="col-md-12">
     <div class="box box-info">
@@ -24,9 +45,9 @@
               <th>名字</th>
               <th>状态</th>
               <th>是否过期</th>
-              <th>吊销</th>
               <th>序列号</th>
               <th>描述</th>
+              <th>删除</th>
             </tr>
             </thead>
             <tbody>
@@ -34,24 +55,23 @@
             {{range .certificates}}
               {{ if ne .Details.Name "server"}}
               <tr>
-                  <td>
-                    <a href="{{urlfor "CertificatesController.Download" ":key" .Details.Name}}">
-                      {{ .Details.Name }}
-                    </a>
-                  </td>
-                  <td>{{ .EntryType }}</td>
-                  <td>{{ dateformat .ExpirationT "2006-01-02 15:04"}}</td>
-                  {{if eq .Revocation ""}}
-                    <td></td>
-                  {{else}}
-                    <td>{{ dateformat .RevocationT "2006-01-02 15:04"}}</td>
-                  {{end}}
-                  <td>{{ .Serial }}</td>
-                  <td>
-                    <span class="label label-warning">Country: {{ .Details.Country }}</span>
-                    <span class="label label-warning">CN: {{ .Details.CN }}</span>
-                    <span class="label label-warning">Email: {{ .Details.Email }}</span>
-                  </td>
+                <td>
+                  <a href="{{urlfor "CertificatesController.Download" ":key" .Details.Name}}">
+                    {{ .Details.Name }}
+                  </a>
+                </td>
+                <td>{{ .EntryType }}</td>
+                <td>{{ dateformat .ExpirationT "2006-01-02 15:04"}}</td>
+
+                <td>{{ .Serial }}</td>
+                <td>
+                  <span class="label label-warning">Country: {{ .Details.Country }}</span>
+                  <span class="label label-warning">CN: {{ .Details.CN }}</span>
+                  <span class="label label-warning">Email: {{ .Details.Email }}</span>
+                </td>
+                <td>
+                  <a href="javascript:$.MyAPP.DelCertificate('{{.Details.Name}}')" class="btn btn-xs btn-danger btn-flat" title="删除">X</a>
+                </td>
               </tr>
               {{ end }}
             {{end}}
@@ -77,27 +97,4 @@
     <!-- /.box -->
   </div>
 </div>
-
-<div class="box box-primary">
-  <div class="box-header with-border">
-    <h3 class="box-title">创建一个新证书</h3>
-  </div>
-  <!-- /.box-header -->
-  <!-- form start -->
-  {{template "common/alert.html" .}}
-  <form role="form" action="{{urlfor "CertificatesController.Post"}}" method="post">
-    <div class="box-body">
-      <div class="form-group {{if field_error_exist .validation "Name" }}has-error{{end}}" >
-        <label for="name">名字</label>
-        <input type="text" class="form-control" id="Name" name="Name">
-      </div>
-      <span class="help-block"> {{template "common/fvalid.html" field_error_message .validation "Name" }}</span>
-    </div>
-    <!-- /.box-body -->
-
-    <div class="box-footer">
-      <button type="submit" class="btn btn-primary">创建</button>
-    </div>
-    </form>
-    </div>
 {{end}}

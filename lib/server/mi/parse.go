@@ -93,7 +93,9 @@ func ParseStatus(input string) (*Status, error) {
 				LastRef:        fields[4],
 				LastRefT:       fields[5],
 			}
-			s.RoutingTable = append(s.RoutingTable, item)
+			if fields[2] != "UNDEF" {
+				s.RoutingTable = append(s.RoutingTable, item)
+			}
 		case c == "CLIENT_LIST":
 			bytesR, _ := strconv.ParseInt(fields[5], 10, 64)
 			bytesS, _ := strconv.ParseInt(fields[6], 10, 64)
@@ -112,7 +114,9 @@ func ParseStatus(input string) (*Status, error) {
 				ConnectedSinceT: fields[8],
 				ClientAddress:   ipAddress.Country + "-" + ipAddress.Province + "-" + ipAddress.City + "-" + ipAddress.ISP,
 			}
-			s.ClientList = append(s.ClientList, item)
+			if fields[1] != "UNDEF" {
+				s.ClientList = append(s.ClientList, item)
+			}
 		}
 	}
 	return &s, nil

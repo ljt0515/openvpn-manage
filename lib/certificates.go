@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"github.com/astaxie/beego"
 	"golang.org/x/text/encoding/simplifiedchinese"
+	"io"
 	"io/ioutil"
 	"openvpn-manage/models"
 	"os"
@@ -54,14 +55,15 @@ func ReadCerts(path string) ([]*Cert, error) {
 				fmt.Errorf("Incorrect number of lines in line: \n%s\n. Expected %d, found %d",
 					line, 6, len(fields))
 		}
+		if fields[0] == "R" {
+			continue
+		}
 		expT, _ := time.Parse("060102150405Z", fields[1])
-		revT, _ := time.Parse("060102150405Z", fields[2])
+		//revT, _ := time.Parse("060102150405Z", fields[2])
 		c := &Cert{
 			EntryType:   fields[0],
 			Expiration:  fields[1],
 			ExpirationT: expT,
-			Revocation:  fields[2],
-			RevocationT: revT,
 			Serial:      fields[3],
 			FileName:    fields[4],
 			Details:     parseDetails(fields[5]),
@@ -82,6 +84,7 @@ func parseDetails(d string) *Details {
 			case "name":
 				details.Name = fields[1]
 			case "CN":
+				details.Name = fields[1]
 				details.CN = fields[1]
 			case "C":
 				details.Country = fields[1]
@@ -106,25 +109,60 @@ func CreateCertificate(name string) bool {
 	if !os.IsNotExist(err) {
 		return true
 	}
-	fmt.Println(runtime.GOOS)
+	return runCmd("EASYRSA_CERT_EXPIRE=3650 ./easyrsa build-client-full " + name + " nopass")
+}
+func runCmd(command string) bool {
 	var cmd *exec.Cmd
 	if runtime.GOOS == "windows" {
-		cmd = exec.Command("cmd", "/C", "dir")
+		cmd = exec.Command("cmd", "/C", command)
 	} else {
-		cmd = exec.Command("/bin/bash", "-c", "EASYRSA_CERT_EXPIRE=3650 ./easyrsa build-client-full "+name+" nopass")
+		cmd = exec.Command("/bin/bash", "-c", command)
 	}
 	cmd.Dir = models.GlobalCfg.OVConfigPath + "easy-rsa/"
 	output, err := cmd.CombinedOutput()
 	if err != nil {
 		beego.Debug(string(output))
 		beego.Error(err)
-		return true
+		return false
 	}
 	Dump(ConvertByte2String(output, GB18030))
-	Dump(output)
+	return false
+}
+func DelCertificate(name string) bool {
+	runCmd("./easyrsa --batch revoke " + name)
+	runCmd("EASYRSA_CRL_DAYS=3650 ./easyrsa gen-crl")
+
+	path := models.GlobalCfg.OVConfigPath + "easy-rsa/pki/"
+	os.Remove(path + "issued/" + name + ".crt")
+	os.Remove(path + "private/" + name + ".key")
+	os.Remove(path + "reqs/" + name + ".req")
+	CopyFile(path+"crl.pem", models.GlobalCfg.OVConfigPath+"crl.pem")
+	runCmd("chown nobody:nobody " + models.GlobalCfg.OVConfigPath + "crl.pem")
 	return false
 }
 
+func CopyFile(srcFileName string, dstFileName string) (int64, error) {
+	srcFile, err := os.Open(srcFileName)
+
+	if err != nil {
+		fmt.Printf("open file err = %v\n", err)
+		return 0, nil
+	}
+
+	defer srcFile.Close()
+
+	//打开dstFileName
+
+	dstFile, err := os.OpenFile(dstFileName, os.O_WRONLY|os.O_CREATE, 0755)
+	if err != nil {
+		fmt.Printf("open file err = %v\n", err)
+		return 0, nil
+	}
+
+	defer dstFile.Close()
+
+	return io.Copy(dstFile, srcFile)
+}
 func ConvertByte2String(byte []byte, charset Charset) string {
 	var str string
 	switch charset {

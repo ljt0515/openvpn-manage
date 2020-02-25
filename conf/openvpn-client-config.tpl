@@ -7,28 +7,24 @@ nobind
 persist-key
 persist-tun
 remote-cert-tls server
-auth SHA512
-cipher AES-256-CBC
+auth {{ .Auth }}
+cipher {{ .Cipher }}
 ignore-unknown-option block-outside-dns
 block-outside-dns
 verb 3
 <ca>
 -----BEGIN CERTIFICATE-----
 {{ .Ca }}
------END CERTIFICATE-----
 </ca>
 <cert>
 -----BEGIN CERTIFICATE-----
 {{ .Cert }}
------END CERTIFICATE-----
 </cert>
 <key>
------BEGIN ENCRYPTED PRIVATE KEY-----
+-----BEGIN PRIVATE KEY-----
 {{ .Key }}
------END ENCRYPTED PRIVATE KEY-----
 </key>
 <tls-crypt>
 -----BEGIN OpenVPN Static key V1-----
 {{ .TlsCrypt }}
------END OpenVPN Static key V1-----
 </tls-crypt>

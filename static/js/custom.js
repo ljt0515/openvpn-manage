@@ -18,6 +18,23 @@ $.MyAPP.Disconnect = function (cname){
   });
 }
 
+$.MyAPP.DelCertificate = function (cname){
+  console.log(cname)
+  $.ajax({
+    type: "DELETE",
+    dataType: "json",
+    url: "/certificates",
+    data: JSON.stringify({ "Name": cname }),
+    success: function(data) {
+      // location.reload();
+      console.log(data);
+    },
+    error: function(a,b,c) {
+      console.log(a,b,c)
+      location.reload();
+    }
+  });
+}
 $(function() {
   new Clipboard('.button-copy');
 

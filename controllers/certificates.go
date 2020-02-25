@@ -1,16 +1,13 @@
 package controllers
 
 import (
-	"archive/zip"
+	"encoding/json"
 	"fmt"
 	"github.com/astaxie/beego"
 	"github.com/astaxie/beego/validation"
-	"io"
 	"openvpn-manage/lib"
 	"openvpn-manage/lib/client/config"
 	"openvpn-manage/models"
-	"os"
-	"path/filepath"
 )
 
 type NewCertParams struct {
@@ -39,44 +36,10 @@ func (c *CertificatesController) Download() {
 	c.Ctx.Output.Header("Content-Type", "application/zip")
 	c.Ctx.Output.Header("Content-Disposition", fmt.Sprintf("attachment; filename=\"%s\"", filename))
 
-	zw := zip.NewWriter(c.Controller.Ctx.ResponseWriter)
-
-	keysPath := models.GlobalCfg.OVConfigPath + "ovpn/"
 	if cfgPath, err := saveClientConfig(name); err == nil {
-		addFileToZip(zw, cfgPath)
-	}
-	addFileToZip(zw, keysPath+"ca.crt")
-	addFileToZip(zw, keysPath+name+".crt")
-	addFileToZip(zw, keysPath+name+".key")
-
-	if err := zw.Close(); err != nil {
-		beego.Error(err)
-	}
-}
-
-func addFileToZip(zw *zip.Writer, path string) error {
-	header := &zip.FileHeader{
-		Name:   filepath.Base(path),
-		Method: zip.Store,
-	}
-	fi, err := os.Open(path)
-	if err != nil {
-		beego.Error(err)
-		return err
+		c.Ctx.Output.Download(cfgPath, filename)
 	}
 
-	fw, err := zw.CreateHeader(header)
-	if err != nil {
-		beego.Error(err)
-		return err
-	}
-
-	if _, err = io.Copy(fw, fi); err != nil {
-		beego.Error(err)
-		return err
-	}
-
-	return fi.Close()
 }
 
 // @router /certificates [get]
@@ -86,7 +49,7 @@ func (c *CertificatesController) Get() {
 }
 
 func (c *CertificatesController) showCerts() {
-	path := models.GlobalCfg.OVConfigPath + "keys/index.txt"
+	path := models.GlobalCfg.OVConfigPath + "easy-rsa/pki/index.txt"
 	certs, err := lib.ReadCerts(path)
 	if err != nil {
 		beego.Error(err)
@@ -118,6 +81,29 @@ func (c *CertificatesController) Post() {
 	}
 	c.showCerts()
 }
+func (c *CertificatesController) Del() {
+	r := NewJSONResponse()
+	r.Data = "error"
+	c.Data["json"] = r
+	cParams := NewCertParams{}
+	if err := json.Unmarshal(c.Ctx.Input.RequestBody, &cParams); err != nil {
+		c.ServeJSON()
+		return
+	}
+	if vMap := validateCertParams(cParams); vMap != nil {
+		c.Data["json"] = vMap
+		c.ServeJSON()
+		return
+	} else {
+		if lib.DelCertificate(cParams.Name) {
+			c.ServeJSON()
+			return
+		}
+	}
+	r.Data = "success"
+	c.Data["json"] = r
+	c.ServeJSON()
+}
 
 func validateCertParams(cert NewCertParams) map[string]map[string]string {
 	valid := validation.Validation{}
@@ -133,23 +119,29 @@ func validateCertParams(cert NewCertParams) map[string]map[string]string {
 }
 
 func saveClientConfig(name string) (string, error) {
+	path := models.GlobalCfg.OVConfigPath + "easy-rsa/pki/"
 	cfg := config.New()
+	cert, _ := lib.ReadLine(path + "issued/" + name + ".crt")
+	cfg.Cert = cert
+	key, _ := lib.ReadLine(path + "private/" + name + ".key")
+	cfg.Key = key
+	ca, _ := lib.ReadLine(path + "ca.crt")
+	cfg.Ca = ca
+	tlsCrypt, _ := lib.ReadLine(models.GlobalCfg.OVConfigPath + "tc.key")
+	cfg.TlsCrypt = tlsCrypt
 	cfg.ServerAddress = models.GlobalCfg.ServerAddress
-	cfg.Cert = name + ".crt"
-	cfg.Key = name + ".key"
 	serverConfig := models.OVConfig{Profile: "default"}
 	serverConfig.Read("Profile")
 	cfg.Port = serverConfig.Port
 	cfg.Proto = serverConfig.Proto
 	cfg.Auth = serverConfig.Auth
 	cfg.Cipher = serverConfig.Cipher
-	cfg.Ca = name + ".ca"
-	destPath := models.GlobalCfg.OVConfigPath + "keys/" + name + ".conf"
+
+	destPath := models.GlobalCfg.OVConfigPath + "ovpn/" + name + ".ovpn"
 	if err := config.SaveToFile("conf/openvpn-client-config.tpl",
 		cfg, destPath); err != nil {
 		beego.Error(err)
 		return "", err
 	}
-
 	return destPath, nil
 }
