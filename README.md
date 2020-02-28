@@ -1,76 +1,69 @@
-# openvpn-manage
+# OpenVpn-管理
 
-## Summary
-OpenVPN server web administration interface.
+## 摘要
+OpenVPN服务器Web管理界面。
 
-Goal: create quick to deploy and easy to use solution that makes work with small OpenVPN environments a breeze.
+目标：创建易于部署且易于使用的解决方案，使在小型OpenVPN环境中的工作变得轻而易举。
 
-If you have docker and docker-compose installed, you can jump directly to [installation](#Prod).
+如果您已安装docker和docker-compose，则可以直接跳至[installation](#Prod)。
 
-![Status page](docs/images/preview_status.png?raw=true)
+![Status page](docs/images/preview_status.png?raw=true1)
 
-Please note this project is in alpha stage. It still needs some work to make it secure and feature complete.
-
-## Motivation
+请注意此项目处于alpha阶段。它仍然需要一些工作，以使它的安全和功能完成。
 
 
 
-## Features
+## 功能
 
-* status page that shows server statistics and list of connected clients
-* easy creation of client certificates
-* ability to download client certificates as a zip package with client configuration inside
-* log preview
-* modification of OpenVPN configuration file through web interface
+*状态页面，显示服务器统计信息和连接的客户端列表
+*轻松创建客户证书
+*能够将客户端证书作为ovpn配置文件下载，并带有内部客户端配置
+*日志预览
+*通过Web界面修改OpenVPN配置文件
 
-## Screenshots
+## 截图
 
-[Screenshots](docs/screenshots.md)
+[截图](docs/screenshots.md)
 
 ## Usage
 
-After startup web service is visible on port 8080. To login use the following default credentials:
-
-* username: admin
-* password: b3secure (this will be soon replaced with random password)
-
-Please change password to your own immediately!
+启动后，在端口8080上可以看到web服务。若要登录，请使用下列默认凭据：
+* 用户名: admin
+* 密  码: 123456 
+请立即将密码更改为自己的密码！
 
 ### Prod
 
-Requirements:
-* docker and docker-compose
-* on firewall open ports: 1194/udp and 8080/tcp
+要求:
+* 在防火墙打开的端口上：1194/udp和8080/tcp
 
-Execute commands
+执行命令
 
     curl -O https://raw.githubusercontent.com/adamwalach/openvpn-manage/master/docs/docker-compose.yml
     docker-compose up -d
 
-It starts two docker containers. One with OpenVPN server and second with OpenVPNAdmin web application. Through a docker volume it creates following directory structure:
-
+它会启动两个码头集装箱。一个用于OpenVPN服务器，另一个用于OpenVPNAdmin Web应用程序。通过一个停靠器卷，它创建了以下目录结构：
 
     .
     ├── docker-compose.yml
     └── openvpn-data
         ├── conf
-        │   ├── dh2048.pem
-        │   ├── ipp.txt
-        │   ├── keys
-        │   │   ├── 01.pem
-        │   │   ├── ca.crt
-        │   │   ├── ca.key
-        │   │   ├── index.txt
-        │   │   ├── index.txt.attr
-        │   │   ├── index.txt.old
-        │   │   ├── serial
-        │   │   ├── serial.old
-        │   │   ├── server.crt
-        │   │   ├── server.csr
-        │   │   ├── server.key
-        │   │   └── vars
-        │   ├── openvpn.log
-        │   └── server.conf
+        │   ├── ca.crt
+        │   ├── ca.key
+        │   ├── client-common.txt
+        │   ├── crl.pem
+        │   ├── dh.pem
+        │   ├── easy-rsa
+        │   ├── ipp.txt
+        │   ├── openvpn-status.log
+        │   ├── ovpn
+        │   ├── server.conf
+        │   ├── server.crt
+        │   ├── server.key
+        │   ├── tc.key
+        │   ├── openvpn.log
+        │   ├── 
+        │   └── 
         └── db
             └── data.db
 

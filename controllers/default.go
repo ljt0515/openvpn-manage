@@ -45,6 +45,7 @@ func (c *MainController) Get() {
 	loadStats, err := client.GetLoadStats()
 	if err != nil {
 		beego.Error(err)
+		c.Data["ovStats"] = mi.LoadStats{}
 	} else {
 		c.Data["ovStats"] = loadStats
 	}

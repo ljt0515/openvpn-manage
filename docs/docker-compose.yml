@@ -3,7 +3,7 @@ services:
   openvpn:
     cap_add:
      - NET_ADMIN
-    image: awalach/openvpn
+    image: 913519/openvpn
     container_name: openvpn
     ports:
      - "1194:1194/udp"
@@ -13,11 +13,11 @@ services:
     volumes:
      - ./openvpn-data/conf:/etc/openvpn
   gui:
-    image: awalach/openvpn-manage
-    container_name: openvpn-gui
+    image: 913519/openvpn-manage
+    container_name: openvpn-manage
     ports:
      - "8080:8080/tcp"
     restart: always
     volumes:
-     - ./openvpn-data/conf:/etc/openvpn
-     - ./openvpn-data/db:/opt/openvpn-gui/db
+     - ./openvpn-data/conf:/etc/openvpn/server
+     - ./openvpn-data/db:/opt/openvpn-manage/db
