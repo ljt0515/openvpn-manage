@@ -1,11 +1,11 @@
 package controllers
 
 import (
-	"openvpn-manage/lib/server/mi"
+	"github.com/ljt000/openvpn-manage/lib/server/mi"
 	"strings"
 
 	"github.com/astaxie/beego"
-	"openvpn-manage/models"
+	"github.com/ljt000/openvpn-manage/models"
 )
 
 type LogsController struct {

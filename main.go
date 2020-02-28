@@ -2,8 +2,8 @@ package main
 
 import (
 	"github.com/astaxie/beego"
-	"openvpn-manage/lib"
-	_ "openvpn-manage/routers"
+	"github.com/ljt000/openvpn-manage/lib"
+	_ "github.com/ljt000/openvpn-manage/routers"
 )
 
 func main() {

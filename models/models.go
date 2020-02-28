@@ -5,8 +5,8 @@ import (
 
 	"github.com/astaxie/beego"
 	"github.com/astaxie/beego/orm"
+	"github.com/ljt000/openvpn-manage/lib/server/config"
 	"gopkg.in/hlandau/passlib.v1"
-	"openvpn-manage/lib/server/config"
 )
 
 var GlobalCfg Settings

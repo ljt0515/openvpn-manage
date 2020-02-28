@@ -3,10 +3,10 @@ package lib
 import (
 	"fmt"
 	"github.com/astaxie/beego"
+	"github.com/ljt000/openvpn-manage/models"
 	"golang.org/x/text/encoding/simplifiedchinese"
 	"io"
 	"io/ioutil"
-	"openvpn-manage/models"
 	"os"
 	"os/exec"
 	"runtime"

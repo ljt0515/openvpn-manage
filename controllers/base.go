@@ -2,7 +2,7 @@ package controllers
 
 import (
 	"github.com/astaxie/beego"
-	"openvpn-manage/models"
+	"github.com/ljt000/openvpn-manage/models"
 )
 
 type BaseController struct {

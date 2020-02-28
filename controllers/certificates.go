@@ -5,9 +5,9 @@ import (
 	"fmt"
 	"github.com/astaxie/beego"
 	"github.com/astaxie/beego/validation"
-	"openvpn-manage/lib"
-	"openvpn-manage/lib/client/config"
-	"openvpn-manage/models"
+	"github.com/ljt000/openvpn-manage/lib"
+	"github.com/ljt000/openvpn-manage/lib/client/config"
+	"github.com/ljt000/openvpn-manage/models"
 )
 
 type NewCertParams struct {
@@ -51,9 +51,9 @@ func (c *CertificatesController) Get() {
 func (c *CertificatesController) showCerts() {
 	path := models.GlobalCfg.OVConfigPath + "easy-rsa/pki/index.txt"
 	certs, err := lib.ReadCerts(path)
-	if err != nil {
-		beego.Error(err)
-	}
+	//if err != nil {
+	//	beego.Error(err)
+	//}
 	lib.Dump(certs)
 	c.Data["certificates"] = &certs
 }

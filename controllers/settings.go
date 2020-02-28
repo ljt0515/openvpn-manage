@@ -5,7 +5,7 @@ import (
 
 	"github.com/astaxie/beego"
 	"github.com/astaxie/beego/orm"
-	"openvpn-manage/models"
+	"github.com/ljt000/openvpn-manage/models"
 )
 
 type SettingsController struct {

@@ -9,15 +9,15 @@ services:
      - "1194:1194/udp"
     restart: always
     depends_on:
-      - "gui"
+      - "manage"
     volumes:
-     - ./openvpn-data/conf:/etc/openvpn
-  gui:
+     - ./etc/openvpn/server:/etc/openvpn/server
+  manage:
     image: 913519/openvpn-manage
     container_name: openvpn-manage
     ports:
      - "8080:8080/tcp"
     restart: always
     volumes:
-     - ./openvpn-data/conf:/etc/openvpn/server
+     - ./etc/openvpn/server:/etc/openvpn/server
      - ./openvpn-data/db:/opt/openvpn-manage/db

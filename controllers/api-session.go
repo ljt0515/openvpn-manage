@@ -3,8 +3,8 @@ package controllers
 import (
 	"encoding/json"
 
-	mi "openvpn-manage/lib/server/mi"
-	"openvpn-manage/models"
+	mi "github.com/ljt000/openvpn-manage/lib/server/mi"
+	"github.com/ljt000/openvpn-manage/models"
 )
 
 //APISessionController manages vpn sessions

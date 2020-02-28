@@ -1,4 +1,4 @@
-module openvpn-manage
+module github.com/ljt000/openvpn-manage
 
 require (
 	github.com/Sirupsen/logrus v0.10.0

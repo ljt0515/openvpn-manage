@@ -1,15 +1,8 @@
-// Package routers defines application routes
-// @APIVersion 1.0.0
-// @Title OpenVPN API
-// @Description REST API allows you to control and monitor your OpenVPN server
-// @Contact adam.walach@gmail.com
-// License Apache 2.0
-// LicenseUrl http://www.apache.org/licenses/LICENSE-2.0.html
 package routers
 
 import (
-	"openvpn-manage/controllers"
 	"github.com/astaxie/beego"
+	"github.com/ljt000/openvpn-manage/controllers"
 )
 
 func init() {

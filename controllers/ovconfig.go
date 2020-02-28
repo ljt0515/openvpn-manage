@@ -6,9 +6,9 @@ import (
 
 	"github.com/astaxie/beego"
 	"github.com/astaxie/beego/orm"
-	"openvpn-manage/lib"
-	"openvpn-manage/lib/server/config"
-	"openvpn-manage/models"
+	"github.com/ljt000/openvpn-manage/lib"
+	"github.com/ljt000/openvpn-manage/lib/server/config"
+	"github.com/ljt000/openvpn-manage/models"
 )
 
 type OVConfigController struct {
