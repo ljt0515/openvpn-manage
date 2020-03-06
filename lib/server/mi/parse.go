@@ -101,17 +101,17 @@ func ParseStatus(input string) (*Status, error) {
 			bytesS, _ := strconv.ParseInt(fields[6], 10, 64)
 			ip := strings.Split(fields[2], ":")[0]
 			ipAddress, _ := region.BtreeSearch(ip)
-			dates := strings.Split(fields[7], " ")
-			connectedSince := dates[4] + "-" + month(dates[1]) + "-" + dates[2] + " " + dates[3]
+			atoi, _ := strconv.ParseInt(fields[8], 10, 64)
+			connectedSinceT := time.Unix(atoi, 0).Format("2006-01-02 15:04:05")
 			item := &OVClient{
 				CommonName:      fields[1],
 				RealAddress:     ip,
 				VirtualAddress:  fields[3],
 				BytesReceived:   bytesR,
 				BytesSent:       bytesS,
-				ConnectedSince:  connectedSince,
-				TimeOnline:      timeOnline(connectedSince),
-				ConnectedSinceT: fields[8],
+				ConnectedSince:  connectedSinceT,
+				TimeOnline:      timeOnline(connectedSinceT),
+				ConnectedSinceT: connectedSinceT,
 				ClientAddress:   ipAddress.Country + "-" + ipAddress.Province + "-" + ipAddress.City + "-" + ipAddress.ISP,
 			}
 			if fields[1] != "UNDEF" {
