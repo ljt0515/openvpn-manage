@@ -6,6 +6,6 @@ PKGFILE=openvpn-manage.tar.gz
 
 cp -f ../$PKGFILE ./
 
-docker build -t 913519/openvpn-manage .
+docker build -t ljt0515/openvpn-manage .
 
 rm -f $PKGFILE

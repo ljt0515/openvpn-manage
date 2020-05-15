@@ -1,6 +1,8 @@
 package models
 
 import (
+	"io/ioutil"
+	"net/http"
 	"os"
 
 	"github.com/astaxie/beego"
@@ -71,11 +73,21 @@ func createDefaultUsers() {
 }
 
 func createDefaultSettings() {
+	resp, err := http.Get("https://api.ipify.org/")
+	ip :=""
+	if err !=nil {
+		ip ="127.0.0.1"
+		beego.Error(err)
+	}
+	defer resp.Body.Close()
+	//读取报文中所有内容
+	body, _ := ioutil.ReadAll(resp.Body)
+	ip= string(body)
 	s := Settings{
 		Profile:       "default",
 		MIAddress:     "127.0.0.1:5555",
 		MINetwork:     "tcp",
-		ServerAddress: "127.0.0.1",
+		ServerAddress: ip,
 		OVConfigPath:  "/etc/openvpn/server",
 	}
 	o := orm.NewOrm()

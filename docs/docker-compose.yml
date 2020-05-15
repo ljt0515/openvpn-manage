@@ -3,21 +3,22 @@ services:
   openvpn:
     cap_add:
      - NET_ADMIN
-    image: 913519/openvpn
+    image: ljt0515/openvpn
     container_name: openvpn
     ports:
      - "1194:1194/udp"
+     - "5556:5556/tcp"
     restart: always
     depends_on:
       - "manage"
     volumes:
-     - ./etc/openvpn/server:/etc/openvpn/server
+     - ./opt/openvpn/server:/opt/openvpn/server
   manage:
-    image: 913519/openvpn-manage
+    image: ljt0515/openvpn-manage
     container_name: openvpn-manage
     ports:
      - "8080:8080/tcp"
     restart: always
     volumes:
-     - ./etc/openvpn/server:/etc/openvpn/server
-     - ./openvpn-data/db:/opt/openvpn-manage/db
+     - ./opt/openvpn/server:/opt/openvpn/server
+     - ./opt/openvpn/db:/opt/openvpn-manage/db

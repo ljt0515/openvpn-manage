@@ -28,6 +28,8 @@ func (c *MainController) Get() {
 	status, err := client.GetStatus()
 	if err != nil {
 		beego.Error(err)
+		c.Data["ovStatus"]=mi.Status{}
+		c.Data["ovVersion"]=0
 	} else {
 		c.Data["ovStatus"] = status
 		c.Data["ovVersion"] = status.Title
